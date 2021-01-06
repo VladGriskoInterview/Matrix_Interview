@@ -21,9 +21,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         super.viewDidLoad()
         
         //tells wherther the user is connected to a network or not, if is then fetches data from json, called asynchronously
-        
-        setTableView()
-        
+          
         DispatchQueue.global().async { [weak self] in
             self?.checkNetworkConnection { (success) in
                 if success {
@@ -32,6 +30,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 }
             }
         }
+        
+        setTableView()
 
         setFilterStackView()
     }
@@ -124,13 +124,15 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             if !Cache.shared.fileExists(Constants.cacheDirName, in: .caches) {
                 self?.fetchJSON {
                     Cache.shared.store(self?.countries, to: .caches, as: Constants.cacheDirName)
+                     DispatchQueue.main.async {
+                        self?.tableView.reloadData()
+                    }
                 }
             } else {
                 self?.countries = Cache.shared.retrieve(Constants.cacheDirName, from: .caches, as: [Country].self)
-            }
-            
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
+                 DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
             }
         }
     }
