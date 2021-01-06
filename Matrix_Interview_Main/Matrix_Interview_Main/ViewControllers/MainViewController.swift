@@ -27,6 +27,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
                 if success {
                     self?.getData()
                     //stop monitoring connection after we got the data
+                    NetStatus.shared.stopMonitoring()
                 }
             }
         }
